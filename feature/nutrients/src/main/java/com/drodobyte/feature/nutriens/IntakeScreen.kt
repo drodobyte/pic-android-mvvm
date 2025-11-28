@@ -6,19 +6,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.drodobyte.feature.nutriens.NutrientsViewModel.State
+import com.drodobyte.feature.nutriens.IntakeViewModel.State
 
 @Composable
-fun NutrientsScreen(
+fun IntakeScreen(
     modifier: Modifier = Modifier,
-    viewModel: NutrientsViewModel = hiltViewModel(),
+    viewModel: IntakeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    NutrientsScreen(state, modifier)
+    IntakeScreen(state, modifier)
 }
 
 @Composable
-private fun NutrientsScreen(state: State, modifier: Modifier) {
+private fun IntakeScreen(state: State, modifier: Modifier) {
     Text(state.toString(), modifier)
 }
 

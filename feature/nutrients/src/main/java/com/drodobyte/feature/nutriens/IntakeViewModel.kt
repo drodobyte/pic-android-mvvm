@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.drodobyte.core.data.model.Food
 import com.drodobyte.core.data.repository.FoodRepository
-import com.drodobyte.feature.nutriens.NutrientsViewModel.State.Error
-import com.drodobyte.feature.nutriens.NutrientsViewModel.State.Loading
-import com.drodobyte.feature.nutriens.NutrientsViewModel.State.Success
+import com.drodobyte.feature.nutriens.IntakeViewModel.State.Error
+import com.drodobyte.feature.nutriens.IntakeViewModel.State.Loading
+import com.drodobyte.feature.nutriens.IntakeViewModel.State.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class NutrientsViewModel @Inject constructor(
+class IntakeViewModel @Inject constructor(
     foodRepository: FoodRepository
 ) : ViewModel() {
 
