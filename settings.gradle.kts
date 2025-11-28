@@ -23,4 +23,5 @@ rootProject.name = "Protein Intake Calculator"
 include(":app")
 include(":core:data")
 include(":core:data-local")
+include(":core:data-remote")
 include(":feature:nutrients")
