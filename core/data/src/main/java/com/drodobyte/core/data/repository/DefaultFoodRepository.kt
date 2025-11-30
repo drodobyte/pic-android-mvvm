@@ -4,7 +4,6 @@ import android.content.Context
 import com.drodobyte.core.data.room.FoodDao
 import com.drodobyte.data.retrofit.NutrientsApi
 import com.drodobyte.data.retrofit.NutrientsApiMock
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -12,19 +11,20 @@ import javax.inject.Inject
 // todo make a use case
 internal class DefaultFoodRepository
 @Inject constructor(
-    dao: FoodDao,
+    private val dao: FoodDao,
     api: NutrientsApi, // fixme
     c: Context
 ) : FoodRepository {
 
     val mock by lazy { NutrientsApiMock(c) }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override val foods =
+    override fun foodsByName(name: String) =
         combine(
-            dao.all().map { it.modelsFromLocal },
+            dao.byName(name).map { it.modelsFromLocal },
             mock.foods().map { it.modelsFromRemote }
         ) { local, remote ->
-            local.ifEmpty { remote }
+            local.ifEmpty {
+                remote.filter { name in it.name }
+            }
         }
 }

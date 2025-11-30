@@ -4,14 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.drodobyte.core.data.model.Food
 import com.drodobyte.core.data.repository.FoodRepository
-import com.drodobyte.feature.nutriens.IntakeViewModel.State.Error
-import com.drodobyte.feature.nutriens.IntakeViewModel.State.Loading
-import com.drodobyte.feature.nutriens.IntakeViewModel.State.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,18 +23,34 @@ class IntakeViewModel @Inject constructor(
     foodRepository: FoodRepository
 ) : ViewModel() {
 
-    val uiState = foodRepository.foods
-        .map { Success(it) }
-        .catch { Error(it) }
+    private val search = MutableStateFlow(State())
+
+    val uiState = search
+        .filter { it.query.isNotBlank() }
+        .distinctUntilChanged()
+        .debounce(1000L)
+        .flatMapLatest { state ->
+            foodRepository
+                .foodsByName(state.query)
+                .map { state.copy(foods = it, isLoading = false) }
+                .catch { state.copy(isError = true, isLoading = false) }
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Loading
+            initialValue = State()
         )
 
-    sealed interface State {
-        object Loading : State
-        data class Success(val foods: List<Food>) : State
-        data class Error(val throwable: Throwable) : State
+    fun search(query: String) {
+        viewModelScope.launch {
+            search.update { it.copy(query = query) }
+        }
     }
+
+    data class State(
+        val query: String = "",
+        val foods: List<Food> = emptyList(),
+        val isError: Boolean = false,
+        val isLoading: Boolean = false,
+    )
 }

@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FoodDao {
 
-    @Query("SELECT * FROM food")
-    fun all(): Flow<List<Food>>
+    @Query("SELECT * FROM food WHERE name LIKE :name")
+    fun byName(name: String): Flow<List<Food>>
 
     @Insert
     suspend fun insert(food: Food)
