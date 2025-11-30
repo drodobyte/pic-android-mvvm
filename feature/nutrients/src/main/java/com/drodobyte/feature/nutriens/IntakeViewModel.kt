@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -28,7 +27,7 @@ class IntakeViewModel @Inject constructor(
     val uiState = search
         .filter { it.query.isNotBlank() }
         .distinctUntilChanged()
-        .debounce(1000L)
+//        .debounce(10L) fixme
         .flatMapLatest { state ->
             foodRepository
                 .foodsByName(state.query)

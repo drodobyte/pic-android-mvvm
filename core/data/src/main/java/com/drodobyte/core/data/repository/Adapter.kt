@@ -7,18 +7,19 @@ import com.drodobyte.data.retrofit.FoodResponse.Food.What.Energy
 import com.drodobyte.data.retrofit.FoodResponse.Food.What.Protein
 
 internal val List<com.drodobyte.core.data.room.Food>.modelsFromLocal: List<Food>
-    get() = map { it.model }
+    get() = map { it.modelFromLocal }
 
-internal val FoodResponse.modelsFromRemote get() = foods.models
+internal val List<Food>.modelsToLocal get() = map { it.modelToLocal }
 
-private val com.drodobyte.core.data.room.Food.model
+internal val FoodResponse.modelsFromRemote get() = foods.modelsFromRemote
+
+private val Food.modelToLocal
+    get() = com.drodobyte.core.data.room.Food(id, name, brand, energy, protein)
+private val com.drodobyte.core.data.room.Food.modelFromLocal
     get() = Food(id, name, brand, kcal, protein)
-
-private val List<FoodResponse.Food>.models get() = map { it.model }
-
-private val FoodResponse.Food.model
+private val List<FoodResponse.Food>.modelsFromRemote get() = map { it.modelFromRemote }
+private val FoodResponse.Food.modelFromRemote
     get() = Food(fdcId, description, brandName, energy, protein)
-
 private val FoodResponse.Food.protein get() = nutrientValue(Protein)
 private val FoodResponse.Food.energy get() = nutrientValue(Energy).toInt()
 private fun FoodResponse.Food.nutrientValue(what: What) =
