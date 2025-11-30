@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Protein Intake Calculator</string>
+    <string name="error_message">Some error occurred</string>
 </resources>

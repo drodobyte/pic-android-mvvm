@@ -1,6 +1,8 @@
 package com.drodobyte.feature.nutriens
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,18 +16,23 @@ import com.drodobyte.feature.nutriens.IntakeViewModel.State
 fun IntakeScreen(
     modifier: Modifier = Modifier,
     viewModel: IntakeViewModel = hiltViewModel(),
+    onError: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    IntakeScreen(state, modifier)
+    IntakeScreen(state, modifier, onError)
 }
 
 @Composable
-private fun IntakeScreen(state: State, modifier: Modifier) =
+private fun IntakeScreen(
+    state: State,
+    modifier: Modifier,
+    onError: () -> Unit
+) =
     Box(modifier) {
         when (state) {
             State.Loading -> Loading()
             is State.Success -> Foods(state.foods)
-            is State.Error -> Error()
+            is State.Error -> onError()
         }
     }
 
@@ -35,8 +42,8 @@ private fun Loading() =
 
 @Composable
 private fun Foods(foods: List<Food>) =
-    Text(foods.joinToString { "${it.name} (${it.brand})" })
-
-@Composable
-private fun Error() =
-    Text("Unexpected error")
+    LazyColumn {
+        items(foods, key = { it.id }) {
+            Text("${it.name} (${it.brand})")
+        }
+    }

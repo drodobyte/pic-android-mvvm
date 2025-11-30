@@ -1,7 +1,7 @@
 package com.drodobyte.core.data.model
 
 data class Food(
-    val id: Id,
+    val id: Long,
     val name: String,
     val brand: String,
     val energy: Int,
