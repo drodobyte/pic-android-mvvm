@@ -37,6 +37,7 @@ android {
 
 dependencies {
     implementation(project(":core:data-local"))
+    implementation(project(":core:data-remote"))
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.core.ktx)

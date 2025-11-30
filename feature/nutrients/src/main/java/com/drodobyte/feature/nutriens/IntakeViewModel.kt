@@ -19,8 +19,7 @@ class IntakeViewModel @Inject constructor(
     foodRepository: FoodRepository
 ) : ViewModel() {
 
-    val uiState = foodRepository
-        .foods
+    val uiState = foodRepository.foods
         .map { Success(it) }
         .catch { Error(it) }
         .stateIn(
