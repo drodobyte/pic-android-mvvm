@@ -1,4 +1,4 @@
-package com.drodobyte.data.retrofit
+package com.drodobyte.data.remote
 
 import org.junit.Test
 

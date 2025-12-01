@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.drodobyte.data.retrofit"
+    namespace = "com.drodobyte.data.remote"
     compileSdk {
         version = release(36)
     }

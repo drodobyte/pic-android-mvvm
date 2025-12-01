@@ -30,7 +30,7 @@ class IntakeViewModel @Inject constructor(
 //        .debounce(10L) fixme
         .flatMapLatest { state ->
             foodRepository
-                .foodsByName(state.query)
+                .byName(state.query)
                 .map { state.copy(foods = it, isLoading = false) }
                 .catch { state.copy(isError = true, isLoading = false) }
         }

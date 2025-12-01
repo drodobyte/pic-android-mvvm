@@ -1,6 +1,6 @@
-package com.drodobyte.data.retrofit
+package com.drodobyte.data.remote
 
-data class FoodResponse(
+data class Response(
     val foods: List<Food>
 ) {
     data class Food(
