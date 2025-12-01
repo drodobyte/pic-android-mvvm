@@ -1,4 +1,4 @@
-package com.drodobyte.data.remote
+package com.drodobyte.core.data.remote
 
 internal interface Api {
 

@@ -2,7 +2,7 @@ package com.drodobyte.core.data.repository
 
 import com.drodobyte.core.data.local.FoodLocalDataSource
 import com.drodobyte.core.data.model.Food
-import com.drodobyte.data.remote.FoodRemoteDataSource
+import com.drodobyte.core.data.remote.FoodRemoteDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest

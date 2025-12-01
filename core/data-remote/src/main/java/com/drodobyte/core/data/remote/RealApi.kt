@@ -1,4 +1,4 @@
-package com.drodobyte.data.remote
+package com.drodobyte.core.data.remote
 
 import retrofit2.http.GET
 import retrofit2.http.Headers

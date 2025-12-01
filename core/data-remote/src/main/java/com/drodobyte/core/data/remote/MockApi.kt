@@ -1,6 +1,7 @@
-package com.drodobyte.data.remote
+package com.drodobyte.core.data.remote
 
 import android.content.Context
+import com.drodobyte.data.remote.R
 import com.google.gson.Gson
 import java.io.InputStreamReader
 

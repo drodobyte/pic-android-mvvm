@@ -1,10 +1,10 @@
 package com.drodobyte.core.data.repository
 
 import com.drodobyte.core.data.model.Food
-import com.drodobyte.data.remote.Response
-import com.drodobyte.data.remote.Response.Food.What
-import com.drodobyte.data.remote.Response.Food.What.Energy
-import com.drodobyte.data.remote.Response.Food.What.Protein
+import com.drodobyte.core.data.remote.Response
+import com.drodobyte.core.data.remote.Response.Food.What
+import com.drodobyte.core.data.remote.Response.Food.What.Energy
+import com.drodobyte.core.data.remote.Response.Food.What.Protein
 
 internal val List<com.drodobyte.core.data.local.Food>.toModel: List<Food>
     get() = map { it.modelFromLocal }

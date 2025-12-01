@@ -3,7 +3,7 @@ package com.drodobyte.core.data.di
 import com.drodobyte.core.data.local.FoodLocalDataSource
 import com.drodobyte.core.data.repository.DefaultFoodRepository
 import com.drodobyte.core.data.repository.FoodRepository
-import com.drodobyte.data.remote.FoodRemoteDataSource
+import com.drodobyte.core.data.remote.FoodRemoteDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class RepositoryModule {
+internal class RepositoryModule {
 
     @Singleton
     @Provides

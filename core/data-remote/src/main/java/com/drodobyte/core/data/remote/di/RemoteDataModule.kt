@@ -1,6 +1,8 @@
-package com.drodobyte.data.remote
+package com.drodobyte.core.data.remote.di
 
 import android.content.Context
+import com.drodobyte.core.data.remote.Api
+import com.drodobyte.core.data.remote.Factory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
