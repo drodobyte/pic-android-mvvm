@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.drodobyte.feature.nutriens"
+    namespace = "com.drodobyte.feature.intake"
     compileSdk {
         version = release(36)
     }

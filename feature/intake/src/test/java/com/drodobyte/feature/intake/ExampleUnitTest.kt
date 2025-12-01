@@ -1,4 +1,4 @@
-package com.drodobyte.feature.nutriens
+package com.drodobyte.feature.intake
 
 import org.junit.Test
 

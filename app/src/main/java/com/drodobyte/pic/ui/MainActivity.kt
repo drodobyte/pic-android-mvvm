@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import com.drodobyte.feature.nutriens.IntakeScreen
+import com.drodobyte.feature.intake.IntakeScreen
 import com.drodobyte.pic.R
 import com.drodobyte.pic.ui.theme.ProteinIntakeCalculatorTheme
 import dagger.hilt.android.AndroidEntryPoint

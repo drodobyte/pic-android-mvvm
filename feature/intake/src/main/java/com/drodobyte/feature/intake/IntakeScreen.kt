@@ -1,4 +1,4 @@
-package com.drodobyte.feature.nutriens
+package com.drodobyte.feature.intake
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.drodobyte.core.data.model.Food
-import com.drodobyte.feature.nutriens.IntakeViewModel.State
+import com.drodobyte.feature.intake.IntakeViewModel.State
 import kotlinx.coroutines.delay
 
 @Composable
