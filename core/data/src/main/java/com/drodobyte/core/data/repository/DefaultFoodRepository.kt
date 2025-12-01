@@ -32,5 +32,5 @@ internal class DefaultFoodRepository
         }
 
     override suspend fun save(foods: List<Food>) =
-        dao.insertOrUpdate(foods.modelsToLocal)
+        dao.upsert(foods.modelsToLocal)
 }
