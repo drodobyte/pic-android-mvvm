@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 internal interface FoodDao {
 
-    @Query("SELECT * FROM food WHERE name LIKE :name")
+    @Query("SELECT * FROM food WHERE name LIKE '%' || :name || '%'")
     fun byName(name: String): Flow<List<Food>>
 
     @Insert

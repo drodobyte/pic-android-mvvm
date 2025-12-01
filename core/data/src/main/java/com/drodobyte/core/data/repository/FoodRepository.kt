@@ -5,5 +5,4 @@ import kotlinx.coroutines.flow.Flow
 
 interface FoodRepository {
     fun byName(name: String): Flow<List<Food>>
-    suspend fun save(foods: List<Food>)
 }
