@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -25,9 +26,9 @@ class IntakeViewModel @Inject constructor(
     foodRepository: FoodRepository
 ) : ViewModel() {
 
-    private val search = MutableStateFlow(State())
+    private val _uiState = MutableStateFlow(State())
 
-    val uiState = search
+    val uiState = _uiState.asStateFlow()
         .filter { it.query.isNotBlank() }
         .distinctUntilChanged()
         .debounce(1000L)
@@ -47,7 +48,7 @@ class IntakeViewModel @Inject constructor(
 
     fun search(query: String) {
         viewModelScope.launch {
-            search.update { it.copy(query = query) }
+            _uiState.update { it.copy(query = query) }
         }
     }
 

@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
 import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
 
 @Entity
 class Food(
@@ -29,7 +28,7 @@ internal abstract class Database : RoomDatabase() {
 internal interface FoodDao {
 
     @Query("SELECT * FROM food WHERE name LIKE '%' || :name || '%'")
-    fun byName(name: String): Flow<List<Food>>
+    suspend fun byName(name: String): List<Food>
 
     @Insert
     suspend fun insert(vararg foods: Food)
