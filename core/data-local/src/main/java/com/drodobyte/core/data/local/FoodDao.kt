@@ -1,4 +1,4 @@
-package com.drodobyte.core.data.room
+package com.drodobyte.core.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -6,9 +6,8 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
-// todo encapsulate in LocalDataSource
 @Dao
-interface FoodDao {
+internal interface FoodDao {
 
     @Query("SELECT * FROM food WHERE name LIKE :name")
     fun byName(name: String): Flow<List<Food>>

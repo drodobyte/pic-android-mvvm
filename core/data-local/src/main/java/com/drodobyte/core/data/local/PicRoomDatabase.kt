@@ -1,9 +1,9 @@
-package com.drodobyte.core.data.room
+package com.drodobyte.core.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
 @Database(entities = [Food::class], version = 1)
-abstract class PicRoomDatabase : RoomDatabase() {
+internal abstract class PicRoomDatabase : RoomDatabase() {
     abstract fun foodDao(): FoodDao
 }

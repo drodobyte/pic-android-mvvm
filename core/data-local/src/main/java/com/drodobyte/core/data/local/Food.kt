@@ -1,4 +1,4 @@
-package com.drodobyte.core.data.room
+package com.drodobyte.core.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
