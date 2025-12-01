@@ -55,9 +55,7 @@ private fun QueryFoods(query: String, foods: List<Food>, onChange: (String) -> U
     Column {
         OutlinedTextField(
             value = query,
-            onValueChange = {
-                onChange(it)
-                            },
+            onValueChange = { onChange(it) },
             label = { Text(stringResource(R.string.search_food)) },
             placeholder = { Text(stringResource(R.string.name)) },
         )
