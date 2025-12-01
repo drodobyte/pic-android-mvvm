@@ -5,12 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.drodobyte.core.data.model.Food
 import com.drodobyte.core.data.repository.FoodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -27,12 +30,14 @@ class IntakeViewModel @Inject constructor(
     val uiState = search
         .filter { it.query.isNotBlank() }
         .distinctUntilChanged()
-//        .debounce(10L) fixme
+        .debounce(1000L)
+        .flowOn(Dispatchers.Main)
         .flatMapLatest { state ->
             foodRepository
                 .byName(state.query)
                 .map { state.copy(foods = it, isLoading = false) }
                 .catch { state.copy(isError = true, isLoading = false) }
+                .flowOn(Dispatchers.IO)
         }
         .stateIn(
             scope = viewModelScope,

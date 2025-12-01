@@ -1,5 +1,6 @@
 package com.drodobyte.feature.nutriens
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,13 +8,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.drodobyte.core.data.model.Food
 import com.drodobyte.feature.nutriens.IntakeViewModel.State
+import kotlinx.coroutines.delay
 
 @Composable
 fun IntakeScreen(
@@ -41,7 +47,7 @@ private fun IntakeScreen(
         when {
             isLoading -> Loading()
             isError -> onError()
-            else -> QueryFoods(query, foods, onQuery)
+            else -> FoodSearch(query, foods, onQuery)
         }
     }
 }
@@ -51,14 +57,9 @@ private fun Loading() =
     Text("Loading")
 
 @Composable
-private fun QueryFoods(query: String, foods: List<Food>, onChange: (String) -> Unit) =
+private fun FoodSearch(query: String, foods: List<Food>, onChange: (String) -> Unit) =
     Column {
-        OutlinedTextField(
-            value = query,
-            onValueChange = { onChange(it) },
-            label = { Text(stringResource(R.string.search_food)) },
-            placeholder = { Text(stringResource(R.string.name)) },
-        )
+        EditField(query, R.string.search_food, R.string.name, onChange)
 
         LazyColumn {
             items(foods, key = { it.id }) {
@@ -66,3 +67,23 @@ private fun QueryFoods(query: String, foods: List<Food>, onChange: (String) -> U
             }
         }
     }
+
+@Composable
+private fun EditField( // OutlinedTextField bug fix
+    query: String,
+    @StringRes label: Int,
+    @StringRes placeholder: Int,
+    onChange: (String) -> Unit
+) {
+    var txt by remember { mutableStateOf(query) }
+    LaunchedEffect(txt) {
+        delay(300)
+        onChange(txt)
+    }
+    OutlinedTextField(
+        value = txt,
+        onValueChange = { txt = it },
+        label = { Text(stringResource(label)) },
+        placeholder = { Text(stringResource(placeholder)) }
+    )
+}
