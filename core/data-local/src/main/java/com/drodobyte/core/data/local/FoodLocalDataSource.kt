@@ -2,7 +2,7 @@ package com.drodobyte.core.data.local
 
 import kotlinx.coroutines.flow.Flow
 
-class FoodLocalSourceData internal constructor(
+class FoodLocalDataSource internal constructor(
     private val dao: FoodDao,
 ) {
     fun byName(name: String): Flow<List<Food>> = dao.byName(name)

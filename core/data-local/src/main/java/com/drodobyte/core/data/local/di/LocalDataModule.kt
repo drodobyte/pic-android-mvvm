@@ -18,7 +18,7 @@ internal class LocalDataModule {
     @Provides
     @Singleton
     fun localDataSource(dao: FoodDao) =
-        Factory.sourceData(dao)
+        Factory.dataSource(dao)
 
     @Provides
     @Singleton

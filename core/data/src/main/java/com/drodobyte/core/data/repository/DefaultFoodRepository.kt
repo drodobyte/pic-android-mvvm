@@ -1,6 +1,6 @@
 package com.drodobyte.core.data.repository
 
-import com.drodobyte.core.data.local.FoodLocalSourceData
+import com.drodobyte.core.data.local.FoodLocalDataSource
 import com.drodobyte.core.data.model.Food
 import com.drodobyte.data.remote.FoodRemoteDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
 internal class DefaultFoodRepository(
-    val local: FoodLocalSourceData,
+    val local: FoodLocalDataSource,
     val remote: FoodRemoteDataSource,
 ) : FoodRepository {
 
