@@ -44,7 +44,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature:nutrients"))
+    implementation(project(":feature:intake"))
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.core.ktx)

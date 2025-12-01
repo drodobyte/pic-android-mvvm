@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.drodobyte.core.data"
+    namespace = "com.drodobyte.core.data.local"
     compileSdk {
         version = release(36)
     }

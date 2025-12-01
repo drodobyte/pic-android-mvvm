@@ -1,7 +1,6 @@
 package com.drodobyte.core.data.remote
 
 import android.content.Context
-import com.drodobyte.data.remote.R
 import com.google.gson.Gson
 import retrofit2.http.GET
 import retrofit2.http.Headers
