@@ -6,6 +6,8 @@ import com.drodobyte.core.data.model.Food
 import com.drodobyte.core.data.repository.FoodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,6 +30,7 @@ class IntakeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(State())
 
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val uiState = _uiState.asStateFlow()
         .filter { it.query.isNotBlank() }
         .distinctUntilChanged()
