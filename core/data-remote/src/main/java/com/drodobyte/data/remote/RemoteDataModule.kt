@@ -10,14 +10,15 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class RemoteDataModule {
-
-    @Provides
-    internal fun dataSource(api: Api) =
-        FoodRemoteDataSource(api)
+internal class RemoteDataModule {
 
     @Provides
     @Singleton
-    internal fun api(@ApplicationContext context: Context) =
+    fun dataSource(api: Api) =
+        Factory.dataSource(api)
+
+    @Provides
+    @Singleton
+    fun api(@ApplicationContext context: Context) =
         Factory.api(context, mock = true)
 }

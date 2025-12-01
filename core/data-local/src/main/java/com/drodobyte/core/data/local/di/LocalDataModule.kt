@@ -3,8 +3,7 @@ package com.drodobyte.core.data.local.di
 import android.content.Context
 import com.drodobyte.core.data.local.Factory
 import com.drodobyte.core.data.local.FoodDao
-import com.drodobyte.core.data.local.FoodLocalSourceData
-import com.drodobyte.core.data.local.PicRoomDatabase
+import com.drodobyte.core.data.local.Database
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,18 +13,20 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class LocalDataModule {
-
-    @Provides
-    internal fun localDataSource(dao: FoodDao) =
-        FoodLocalSourceData(dao)
-
-    @Provides
-    internal fun foodDao(database: PicRoomDatabase) =
-        database.foodDao()
+internal class LocalDataModule {
 
     @Provides
     @Singleton
-    internal fun roomDatabase(@ApplicationContext context: Context) =
+    fun localDataSource(dao: FoodDao) =
+        Factory.sourceData(dao)
+
+    @Provides
+    @Singleton
+    fun foodDao(database: Database) =
+        Factory.dao(database)
+
+    @Provides
+    @Singleton
+    fun database(@ApplicationContext context: Context) =
         Factory.database(context)
 }

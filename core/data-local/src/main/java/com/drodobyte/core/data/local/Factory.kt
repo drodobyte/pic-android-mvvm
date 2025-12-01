@@ -5,10 +5,16 @@ import androidx.room.Room
 
 internal object Factory {
 
+    fun sourceData(dao: FoodDao) =
+        FoodLocalSourceData(dao)
+
     fun database(context: Context) =
         Room.databaseBuilder(
             context,
-            PicRoomDatabase::class.java,
+            Database::class.java,
             "pic"
         ).build()
+
+    fun dao(database: Database) =
+        database.foodDao()
 }

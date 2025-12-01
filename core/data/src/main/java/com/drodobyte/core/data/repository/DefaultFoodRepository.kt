@@ -9,9 +9,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 
-internal class DefaultFoodRepository @Inject constructor(
+internal class DefaultFoodRepository(
     val local: FoodLocalSourceData,
     val remote: FoodRemoteDataSource,
 ) : FoodRepository {
