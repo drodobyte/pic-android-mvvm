@@ -87,7 +87,7 @@ class IntakeViewModel @Inject constructor(
     private fun searchFoods() = search
         .filter { it.isNotBlank() }
         .distinctUntilChanged()
-        .debounce(1000L)
+        .debounce(500L)
         .flowOn(Dispatchers.Main)
         .flatMapLatest {
             foodRepository
