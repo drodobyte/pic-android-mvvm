@@ -2,11 +2,14 @@ package com.drodobyte.feature.intake
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.drodobyte.core.data.model.Food
@@ -72,6 +75,7 @@ private fun State.IntakeForm(
             onSearch = onSearch,
             onSelected = onSelected
         )
+        Spacer(Modifier.height(24.dp))
         RecommendedIntake()
     }
 
@@ -93,12 +97,18 @@ private fun FoodSearch(
 @Composable
 private fun State.RecommendedIntake() =
     Text(
-        stringResource(
-            when {
-                userWeight != null && selectedFood != null -> R.string.recommended_intake
-                else -> R.string.input_needed
-            }
-        )
+        when {
+            userInputOk -> stringResource(
+                R.string.recommended_intake,
+                userWeight!!,
+                proteinIntake!!.first,
+                proteinIntake.last,
+                foodIntake!!.first,
+                foodIntake.last
+            )
+
+            else -> stringResource(R.string.input_needed)
+        }
     )
 
 private val Food.brandName get() = "$name ($brand)"

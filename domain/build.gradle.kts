@@ -1,12 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "com.drodobyte.feature.intake"
+    namespace = "com.drodobyte.domain"
     compileSdk {
         version = release(36)
     }
@@ -37,16 +35,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:data"))
-    implementation(project(":domain"))
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
-
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.material3)
-    debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

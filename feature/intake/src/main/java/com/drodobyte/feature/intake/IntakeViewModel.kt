@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.drodobyte.core.data.model.Food
 import com.drodobyte.core.data.repository.FoodRepository
+import com.drodobyte.domain.usecase.RecommendedIntakeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,6 +28,7 @@ class IntakeViewModel @Inject constructor(
     private val foodRepository: FoodRepository
 ) : ViewModel() {
 
+    private val useCase = RecommendedIntakeUseCase()
     private val search = MutableStateFlow("")
     private val weight = MutableStateFlow<Int?>(null)
     private val selectedFood = MutableStateFlow<Food?>(null)
@@ -37,7 +39,7 @@ class IntakeViewModel @Inject constructor(
         search,
         searchFoods()
     ) { weight, selectedFood, search, foods ->
-        State(weight, selectedFood, search, foods)
+        combineState(weight, selectedFood, search, foods)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -53,11 +55,33 @@ class IntakeViewModel @Inject constructor(
         val selectedFood: Food? = null,
         val search: String = "",
         val foods: List<Food> = emptyList(),
-        val intakeLower: Int? = null,
-        val intakeUpper: Int? = null,
+        val proteinIntake: IntRange? = null,
+        val foodIntake: IntRange? = null,
         val isError: Boolean = false,
         val isLoading: Boolean = false,
-    )
+    ) {
+        val userInputOk = userWeight != null && selectedFood != null
+    }
+
+    private fun combineState(
+        weight: Int?,
+        selectedFood: Food?,
+        search: String,
+        foods: List<Food>
+    ) =
+        State(weight, selectedFood, search, foods).run {
+            takeIf { userInputOk }?.let {
+                useCase(
+                    userWeight = userWeight!!,
+                    foodProteinContent = selectedFood!!.protein.toInt()
+                ).let {
+                    copy(
+                        proteinIntake = it.proteinIntake,
+                        foodIntake = it.foodIntake
+                    )
+                }
+            } ?: this
+        }
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     private fun searchFoods() = search
