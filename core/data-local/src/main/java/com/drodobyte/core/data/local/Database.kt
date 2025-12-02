@@ -14,7 +14,7 @@ class Food(
     @PrimaryKey
     val id: Long = 0,
     val name: String,
-    val brand: String,
+    val brand: String?,
     val kcal: Int,
     val protein: Float,
 )

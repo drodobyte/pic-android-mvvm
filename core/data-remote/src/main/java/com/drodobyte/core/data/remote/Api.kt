@@ -18,7 +18,7 @@ data class Response(
     data class Food(
         val fdcId: Long,
         val description: String,
-        val brandName: String,
+        val brandName: String?,
         val foodNutrients: List<Nutrient>
     ) {
         data class Nutrient(

@@ -111,4 +111,4 @@ private fun State.RecommendedIntake() =
         }
     )
 
-private val Food.brandName get() = "$name ($brand)"
+private val Food.brandName get() = "$name${brand?.let { "($it)" } ?: ""}"
