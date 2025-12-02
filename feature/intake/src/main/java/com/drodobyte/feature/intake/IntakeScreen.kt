@@ -85,9 +85,9 @@ private fun FoodSearch(
     SearchBar(
         query = query,
         placeholder = R.string.search_food,
-        results = foods.map { it.uniqueName },
+        results = foods.map { it.brandName },
         onSearch = onSearch,
-        onSelected = { name -> onSelected(foods.find { it.uniqueName == name }) }
+        onSelected = { name -> onSelected(foods.find { it.brandName == name }) }
     )
 
 @Composable
@@ -101,4 +101,4 @@ private fun State.RecommendedIntake() =
         )
     )
 
-private val Food.uniqueName get() = "$name ($brand:$id)"
+private val Food.brandName get() = "$name ($brand)"

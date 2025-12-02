@@ -2,10 +2,8 @@ package com.drodobyte.feature.intake.util
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions.Companion.Default
 import androidx.compose.foundation.verticalScroll
@@ -23,9 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType.Companion.Number
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 @Composable
@@ -66,9 +64,8 @@ internal fun SearchBar(
         onSearch(txt)
     }
     SearchBar(
-        modifier = Modifier,
-//                    .align(Alignment.TopCenter),
-//                    .semantics { traversalIndex = 0f },
+        modifier = Modifier
+            .onFocusChanged { expanded = it.hasFocus },
         inputField = {
             SearchBarDefaults.InputField(
                 query = txt,
@@ -82,12 +79,8 @@ internal fun SearchBar(
         expanded = expanded,
         onExpandedChange = { expanded = it },
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .height(300.dp)
-        ) {
-            items(results) {
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+            results.forEach {
                 ListItem(
                     headlineContent = { Text(it) },
                     modifier = Modifier
