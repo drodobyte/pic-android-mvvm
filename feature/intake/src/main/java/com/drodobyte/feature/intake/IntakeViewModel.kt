@@ -10,14 +10,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -25,40 +24,54 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntakeViewModel @Inject constructor(
-    foodRepository: FoodRepository
+    private val foodRepository: FoodRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(State())
+    private val search = MutableStateFlow("")
+    private val weight = MutableStateFlow<Int?>(null)
+    private val selectedFood = MutableStateFlow<Food?>(null)
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val uiState = _uiState.asStateFlow()
-        .filter { it.query.isNotBlank() }
-        .distinctUntilChanged()
-        .debounce(1000L)
-        .flowOn(Dispatchers.Main)
-        .flatMapLatest { state ->
-            foodRepository
-                .byName(state.query)
-                .map { state.copy(foods = it, isLoading = false) }
-                .catch { state.copy(isError = true, isLoading = false) }
-                .flowOn(Dispatchers.IO)
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = State()
-        )
+    val uiState = combine(
+        weight,
+        selectedFood,
+        search,
+        searchFoods()
+    ) { weight, selectedFood, search, foods ->
+        State(weight, selectedFood, search, foods)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = State()
+    )
 
-    fun search(query: String) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(query = query) }
-        }
-    }
+    fun search(query: String) = search.set { query }
+    fun weight(kg: Int?) = weight.set { kg }
+    fun selectedFood(food: Food?) = selectedFood.set { food }
 
     data class State(
-        val query: String = "",
+        val userWeight: Int? = null,
+        val selectedFood: Food? = null,
+        val search: String = "",
         val foods: List<Food> = emptyList(),
+        val intakeLower: Int? = null,
+        val intakeUpper: Int? = null,
         val isError: Boolean = false,
         val isLoading: Boolean = false,
     )
+
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    private fun searchFoods() = search
+        .filter { it.isNotBlank() }
+        .distinctUntilChanged()
+        .debounce(1000L)
+        .flowOn(Dispatchers.Main)
+        .flatMapLatest {
+            foodRepository
+                .byName(it)
+                .catch { emptyList<Food>() }
+                .flowOn(Dispatchers.IO)
+        }
+
+    private fun <T> MutableStateFlow<T>.set(data: () -> T) =
+        viewModelScope.launch { update { data() } }
 }
