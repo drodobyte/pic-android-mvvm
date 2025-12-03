@@ -6,4 +6,5 @@
     <string name="kg">Kg</string>
     <string name="recommended_intake">The recommended protein intake for a person weighting %1$dkg is at least %2$dgr and at most %3$dgr. Those amounts can be found in %4$d-%5$dgr of the selected food.</string>
     <string name="input_needed">Please, write your weight (Kg) and select a food.</string>
+    <string name="error_message">Some error occurred</string>
 </resources>

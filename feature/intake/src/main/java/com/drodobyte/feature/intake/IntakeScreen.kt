@@ -1,6 +1,5 @@
 package com.drodobyte.feature.intake
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,13 +9,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,50 +30,44 @@ import com.drodobyte.core.data.model.Food
 import com.drodobyte.feature.intake.IntakeViewModel.State
 import com.drodobyte.feature.intake.util.IntEditField
 import com.drodobyte.feature.intake.util.SearchBar
+import kotlinx.coroutines.launch
 
 @Composable
+@PreviewScreenSizes
 fun IntakeScreen(
-    viewModel: IntakeViewModel = hiltViewModel(),
-    onError: () -> Unit
+    viewModel: IntakeViewModel = hiltViewModel()
 ) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
-    IntakeScreen(
-        state = state,
-        onWeight = { viewModel.weight(it) },
-        onSearch = { viewModel.search(it) },
-        onSelected = { viewModel.selectedFood(it) },
-        onError = onError
-    )
-}
+    val snackbarHostState = remember { SnackbarHostState() }
 
-@Composable
-private fun IntakeScreen(
-    state: State,
-    onSearch: (String) -> Unit,
-    onSelected: (Food?) -> Unit,
-    onWeight: (Int?) -> Unit,
-    onError: () -> Unit,
-) = with(state) {
-    Box(Modifier.padding(20.dp)) {
-        when {
-            isLoading -> Loading()
-            isError -> onError()
-            else -> IntakeForm(onWeight, onSearch, onSelected)
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        },
+    ) {
+        val state by viewModel.uiState.collectAsStateWithLifecycle()
+        state.Intake(
+            onWeight = { viewModel.weight(it) },
+            onSearch = { viewModel.search(it) },
+            onSelected = { viewModel.selectedFood(it) },
+        )
+
+        val scope = rememberCoroutineScope()
+        val error = stringResource(R.string.error_message)
+        LaunchedEffect(Unit) {
+            if (state.isError) {
+                scope.launch { snackbarHostState.showSnackbar(error) }
+            }
         }
     }
 }
 
 @Composable
-private fun Loading() =
-    Text("Loading")
-
-@Composable
-private fun State.IntakeForm(
-    onWeight: (Int?) -> Unit,
+private fun State.Intake(
     onSearch: (String) -> Unit,
     onSelected: (Food?) -> Unit,
+    onWeight: (Int?) -> Unit,
 ) =
-    Column {
+    Column(Modifier.padding(20.dp)) {
         RecommendedIntake(Modifier.height(160.dp))
         Spacer(Modifier.height(24.dp))
         Row(verticalAlignment = Alignment.Top) {
