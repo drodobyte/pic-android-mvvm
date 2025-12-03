@@ -3,6 +3,7 @@ package com.drodobyte.feature.intake
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -43,9 +44,10 @@ fun IntakeScreen(
         snackbarHost = {
             SnackbarHost(snackbarHostState)
         },
-    ) {
+    ) { padding ->
         val state by viewModel.uiState.collectAsStateWithLifecycle()
         state.Intake(
+            modifier = Modifier.padding(padding),
             onWeight = { viewModel.weight(it) },
             onSearch = { viewModel.search(it) },
             onSelected = { viewModel.selectedFood(it) },
@@ -63,12 +65,13 @@ fun IntakeScreen(
 
 @Composable
 private fun State.Intake(
+    modifier: Modifier = Modifier,
     onSearch: (String) -> Unit,
     onSelected: (Food?) -> Unit,
     onWeight: (Int?) -> Unit,
 ) =
-    Column(Modifier.padding(20.dp)) {
-        RecommendedIntake(Modifier.height(160.dp))
+    Column(modifier.padding(24.dp)) {
+        RecommendedIntake(Modifier.fillMaxWidth())
         Spacer(Modifier.height(24.dp))
         Row(verticalAlignment = Alignment.Top) {
             IntEditField(
