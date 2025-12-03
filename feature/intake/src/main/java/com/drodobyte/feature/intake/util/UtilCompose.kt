@@ -9,10 +9,10 @@ import androidx.compose.foundation.text.KeyboardOptions.Companion.Default
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,14 +31,17 @@ internal fun IntEditField(
     number: Int?,
     @StringRes label: Int,
     @StringRes placeholder: Int,
-    onChange: (Int?) -> Unit
+    onChange: (Int?) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var str by remember { mutableStateOf(number) }
     LaunchedEffect(str) {
         delay(300) // OutlinedTextField bug fix
         onChange(str)
     }
-    OutlinedTextField(
+    TextField(
+        modifier = modifier,
+        singleLine = true,
         value = str?.toString() ?: "",
         onValueChange = { str = it.toIntOrNull() },
         label = { Text(stringResource(label)) },
@@ -55,6 +58,7 @@ internal fun SearchBar(
     results: List<String>,
     onSearch: (String) -> Unit,
     onSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -64,8 +68,7 @@ internal fun SearchBar(
         onSearch(txt)
     }
     SearchBar(
-        modifier = Modifier
-            .onFocusChanged { expanded = it.hasFocus },
+        modifier = modifier.then(Modifier.onFocusChanged { expanded = it.hasFocus }),
         inputField = {
             SearchBarDefaults.InputField(
                 query = txt,
