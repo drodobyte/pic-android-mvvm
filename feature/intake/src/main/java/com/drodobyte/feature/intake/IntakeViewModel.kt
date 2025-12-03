@@ -25,10 +25,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntakeViewModel @Inject constructor(
-    private val foodRepository: FoodRepository
+    private val foodRepository: FoodRepository,
+    private val useCase: RecommendedIntakeUseCase,
 ) : ViewModel() {
 
-    private val useCase = RecommendedIntakeUseCase()
     private val search = MutableStateFlow("")
     private val weight = MutableStateFlow<Int?>(null)
     private val selectedFood = MutableStateFlow<Food?>(null)
