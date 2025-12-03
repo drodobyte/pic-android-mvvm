@@ -56,10 +56,12 @@ fun IntakeScreen(
         )
 
         val scope = rememberCoroutineScope()
-        val error = stringResource(R.string.error_message)
-        LaunchedEffect(Unit) {
-            if (state.isError) {
-                scope.launch { snackbarHostState.showSnackbar(error) }
+        val txt = stringResource(R.string.error_message)
+        state.errors?.let {
+            LaunchedEffect(state.errors) {
+                scope.launch {
+                    snackbarHostState.showSnackbar(txt)
+                }
             }
         }
     }

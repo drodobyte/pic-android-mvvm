@@ -29,17 +29,19 @@ class IntakeViewModel @Inject constructor(
     private val useCase: RecommendedIntakeUseCase,
 ) : ViewModel() {
 
+    private val errors = MutableStateFlow<Int?>(null)
     private val search = MutableStateFlow("")
     private val weight = MutableStateFlow<Int?>(null)
     private val selectedFood = MutableStateFlow<Food?>(null)
 
     val uiState = combine(
+        errors,
         weight,
         selectedFood,
         search,
-        searchFoods()
-    ) { weight, selectedFood, search, foods ->
-        combineState(weight, selectedFood, search, foods)
+        searchFoods(),
+    ) { errors, weight, selectedFood, search, foods ->
+        combineState(errors, weight, selectedFood, search, foods)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -51,22 +53,28 @@ class IntakeViewModel @Inject constructor(
     fun selectedFood(food: Food?) = selectedFood.set { food }
 
     data class State(
+        val errors: Int? = null,
         val userWeight: Int? = null,
         val selectedFood: Food? = null,
         val search: String = "",
         val foods: List<Food> = emptyList(),
         val proteinIntake: IntRange? = null,
         val foodIntake: IntRange? = null,
-        val isError: Boolean = false,
         val isLoading: Boolean = false,
     )
 
-    private fun combineState(weight: Int?, selectedFood: Food?, search: String, foods: List<Food>) =
+    private fun combineState(
+        errors: Int?,
+        weight: Int?,
+        selectedFood: Food?,
+        search: String,
+        foods: List<Food>,
+    ) =
         if (weight != null && selectedFood != null) {
-            val intake = useCase(weight, selectedFood.protein.toInt())
-            State(weight, selectedFood, search, foods, intake.proteinIntake, intake.foodIntake)
+            val r = useCase(weight, selectedFood.protein.toInt())
+            State(errors, weight, selectedFood, search, foods, r.proteinIntake, r.foodIntake)
         } else {
-            State(weight, selectedFood, search, foods)
+            State(errors, weight, selectedFood, search, foods)
         }
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
@@ -78,7 +86,10 @@ class IntakeViewModel @Inject constructor(
         .flatMapLatest {
             foodRepository
                 .byName(it)
-                .catch { emit(emptyList()) }
+                .catch {
+                    emit(emptyList())
+                    errors.set { errors.value?.inc() ?: 0 }
+                }
                 .flowOn(Dispatchers.IO)
         }
 
