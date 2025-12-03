@@ -29,3 +29,5 @@ include(":core:data-local")
 include(":core:data-remote")
 include(":domain")
 include(":feature:intake")
+
+includeBuild("build-logic")

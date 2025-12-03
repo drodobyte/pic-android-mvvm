@@ -1,5 +1,5 @@
 plugins {
-    id("common.lib")
+    id("lib")
 }
 
 android {
