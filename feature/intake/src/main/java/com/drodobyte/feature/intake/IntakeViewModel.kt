@@ -78,7 +78,7 @@ class IntakeViewModel @Inject constructor(
         .flatMapLatest {
             foodRepository
                 .byName(it)
-                .catch { emptyList<Food>() }
+                .catch { emit(emptyList()) }
                 .flowOn(Dispatchers.IO)
         }
 
