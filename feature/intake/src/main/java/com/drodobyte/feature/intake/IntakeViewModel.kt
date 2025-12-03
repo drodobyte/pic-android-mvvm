@@ -60,7 +60,6 @@ class IntakeViewModel @Inject constructor(
         val foods: List<Food> = emptyList(),
         val proteinIntake: IntRange? = null,
         val foodIntake: IntRange? = null,
-        val isLoading: Boolean = false,
     )
 
     private fun combineState(
