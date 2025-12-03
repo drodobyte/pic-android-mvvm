@@ -1,5 +1,7 @@
 package com.drodobyte.feature.intake
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -71,7 +73,11 @@ private fun State.Intake(
     onWeight: (Int?) -> Unit,
 ) =
     Column(modifier.padding(24.dp)) {
-        RecommendedIntake(Modifier.fillMaxWidth())
+        IntakeMessage(
+            modifier = Modifier
+                .animateContentSize()
+                .fillMaxWidth(),
+        )
         Spacer(Modifier.height(24.dp))
         Row(verticalAlignment = Alignment.Top) {
             IntEditField(
@@ -112,24 +118,28 @@ private fun FoodSearch(
     )
 
 @Composable
-private fun State.RecommendedIntake(modifier: Modifier = Modifier) =
+private fun State.IntakeMessage(
+    modifier: Modifier = Modifier
+) =
     Card(modifier, elevation = CardDefaults.elevatedCardElevation(defaultElevation = 3.dp)) {
-        Text(
-            textAlign = TextAlign.Justify,
-            modifier = Modifier.padding(10.dp),
-            text = when {
-                userInputOk -> stringResource(
+        Crossfade(userWeight != null && proteinIntake != null && foodIntake != null) { ok ->
+            val txt = if (ok) {
+                stringResource(
                     R.string.recommended_intake,
-                    userWeight!!,
-                    proteinIntake!!.first,
-                    proteinIntake.last,
-                    foodIntake!!.first,
-                    foodIntake.last
+                    userWeight ?: 0,
+                    proteinIntake?.first ?: 0, proteinIntake?.last ?: 0,
+                    foodIntake?.first ?: 0, foodIntake?.last ?: 0
                 )
-
-                else -> stringResource(R.string.input_needed)
+            } else {
+                stringResource(R.string.input_needed)
             }
-        )
+
+            Text(
+                modifier = Modifier.padding(10.dp),
+                textAlign = TextAlign.Justify,
+                text = txt
+            )
+        }
     }
 
 private val Food.brandName get() = "$name${brand?.let { "($it)" } ?: ""}"
