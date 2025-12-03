@@ -59,28 +59,14 @@ class IntakeViewModel @Inject constructor(
         val foodIntake: IntRange? = null,
         val isError: Boolean = false,
         val isLoading: Boolean = false,
-    ) {
-        val userInputOk = userWeight != null && selectedFood != null
-    }
+    )
 
-    private fun combineState(
-        weight: Int?,
-        selectedFood: Food?,
-        search: String,
-        foods: List<Food>
-    ) =
-        State(weight, selectedFood, search, foods).run {
-            takeIf { userInputOk }?.let {
-                useCase(
-                    userWeight = userWeight!!,
-                    foodProteinContent = selectedFood!!.protein.toInt()
-                ).let {
-                    copy(
-                        proteinIntake = it.proteinIntake,
-                        foodIntake = it.foodIntake
-                    )
-                }
-            } ?: this
+    private fun combineState(weight: Int?, selectedFood: Food?, search: String, foods: List<Food>) =
+        if (weight != null && selectedFood != null) {
+            val intake = useCase(weight, selectedFood.protein.toInt())
+            State(weight, selectedFood, search, foods, intake.proteinIntake, intake.foodIntake)
+        } else {
+            State(weight, selectedFood, search, foods)
         }
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
