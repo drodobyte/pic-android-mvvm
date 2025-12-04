@@ -3,6 +3,9 @@ package com.drodobyte.core.data.repository
 import com.drodobyte.core.data.local.FoodLocalDataSource
 import com.drodobyte.core.data.model.Food
 import com.drodobyte.core.data.remote.FoodRemoteDataSource
+import com.drodobyte.core.data.repository.Adapter.Local.Companion.toLocal
+import com.drodobyte.core.data.repository.Adapter.Local.Companion.toModel
+import com.drodobyte.core.data.repository.Adapter.Remote.Companion.toModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -24,7 +27,7 @@ internal class DefaultFoodRepository(
             .flatMapLatest {
                 if (it.isEmpty()) {
                     remote.byName(name)
-                        .onEach { local.save(it.modelsFromRemote.modelsToLocal) }
+                        .onEach { local.save(it.toModel.toLocal) }
                         .flatMapLatest { local.byName(name) }
                 } else {
                     flowOf(it)
