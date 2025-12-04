@@ -36,23 +36,37 @@ import com.drodobyte.feature.intake.util.SearchBar
 import kotlinx.coroutines.launch
 
 @Composable
-@PreviewScreenSizes
 fun IntakeScreen(
     viewModel: IntakeViewModel = hiltViewModel()
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+    IntakeScreen(
+        state,
+        onWeight = { viewModel.weight(it) },
+        onSearch = { viewModel.search(it) },
+        onSelected = { viewModel.selectedFood(it) }
+    )
+}
+
+@Composable
+internal fun IntakeScreen(
+    state: State,
+    onWeight: (Int?) -> Unit,
+    onSearch: (String) -> Unit,
+    onSelected: (Food?) -> Unit,
+) {
+    val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackbarHostState)
         },
     ) { padding ->
-        val state by viewModel.uiState.collectAsStateWithLifecycle()
         state.Intake(
             modifier = Modifier.padding(padding),
-            onWeight = { viewModel.weight(it) },
-            onSearch = { viewModel.search(it) },
-            onSelected = { viewModel.selectedFood(it) },
+            onWeight = { onWeight(it) },
+            onSearch = { onSearch(it) },
+            onSelected = { onSelected(it) },
         )
 
         val scope = rememberCoroutineScope()
