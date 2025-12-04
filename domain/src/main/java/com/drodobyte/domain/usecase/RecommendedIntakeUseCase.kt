@@ -1,5 +1,7 @@
 package com.drodobyte.domain.usecase
 
+import com.drodobyte.domain.util.times
+
 class RecommendedIntakeUseCase() {
 
     data class Intake(
@@ -19,13 +21,8 @@ class RecommendedIntakeUseCase() {
         userWeight: Int,
         foodProteinContent: Int
     ) =
-        (1.5f..2.5f).let {
-            Intake(
-                proteinIntake = it * userWeight,
-                foodIntake = it * (userWeight * 100f / foodProteinContent).toInt()
-            )
-        }
-
-    private operator fun ClosedFloatingPointRange<Float>.times(n: Int) =
-        IntRange((start * n).toInt(), (endInclusive * n).toInt())
+        Intake(
+            proteinIntake = (1.5f..2.5f) * userWeight,
+            foodIntake = (1.5f..2.5f) * (userWeight * 100f / foodProteinContent).toInt()
+        )
 }
